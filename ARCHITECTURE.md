@@ -220,3 +220,38 @@ Missing Import Context:
 Root Cause: Running agent execution files directly without module path context (python Backend/agent/main.py).
 
 Mitigation: Always execute the agent as a module from within the Backend/ directory (python -m agent.main dev).
+
+---
+
+## 7. Future Strategic Roadmap & Feature Goals
+
+### 7.1 Voice & Engine Pipeline
+- **Local Fallback Pipeline:** Complete offline Speech-to-Speech execution utilizing Silero VAD, Whisper STT, local Ollama (Llama 3.2 / Mistral), and Kokoro/Piper TTS.
+- **Dynamic Engine Switcher:** Automatic latency-based and offline failover between Cloud and Local execution pipelines.
+- **Smart Turn Detection & Interruption Handling:** Real-time barge-in and adaptive audio turn-taking.
+- **Multi-Voice & Persona Selector:** Configurable voice timbre, speech rate, emotion, and tone presets.
+- **Noise Suppression & Preprocessing:** Integrated RNNoise background noise reduction and acoustic echo cancellation.
+
+### 7.2 Tools & Function Calling (Agent Capabilities)
+- **Desktop Automation & System Controls:** OS-level controls for audio volume, display brightness, window management, and application launching.
+- **Web Search & Real-Time Grounding:** Live search integration via Tavily, DuckDuckGo, and Google Search APIs.
+- **Code Execution & Terminal Assistant:** Sandboxed CLI execution for developer workflows.
+- **File System & Document Q&A:** Local RAG indexing for markdown notes, PDFs, and codebase repositories.
+- **Smart Home & IoT Integrations:** Home Assistant, Matter, and local IoT device control.
+
+### 7.3 Memory & Personalization (Active Focus)
+- **Long-Term Memory & User Profiles:** Persistent SQLite/Vector-backed knowledge store for user preferences, routines, and identity facts.
+- **Conversation History & Session Replay:** Automatic turn transcription logging, session summarization, and full-text search.
+- **Cross-Device Context Sync:** Seamless context handoff and unified memory between Desktop and Mobile clients.
+
+### 7.4 Client Enhancements (Desktop & Mobile)
+- **Floating Widget & Overlay Mode:** Spotlight-style floating voice orb and non-intrusive desktop HUD.
+- **Global Push-to-Talk & Hotkey Activation:** System-wide keyboard shortcut and wake-word listener.
+- **Screen Awareness & Vision Input:** Live desktop screen capture and mobile camera streaming analyzed via Gemini Multimodal Live API.
+- **Real-Time Live Captioning:** Dual-channel streaming transcript feed with multi-language translation.
+- **Mobile Background Audio Mode:** Continuous low-power background voice session on locked mobile devices.
+
+### 7.5 Infrastructure & Production Readiness
+- **Telemetry & Latency Dashboard:** Prometheus/Grafana metrics tracking TTFT, audio packet jitter, and model token usage.
+- **Multi-Room & Multi-User Authentication:** OAuth2 / Supabase user management with access tokens scoped to isolated user namespaces.
+- **Tauri / Native Packaging:** Standalone native desktop builds (.exe / .dmg / .AppImage) with minimal system footprint.
