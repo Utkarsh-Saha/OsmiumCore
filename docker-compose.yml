@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  livekit:
+    image: livekit/livekit-server:latest
+    container_name: osmiumcore-livekit
+    command: --config /etc/livekit.yaml
+    ports:
+      - "7880:7880"   # HTTP API / WebSocket signaling
+      - "7881:7881"   # WebRTC TCP fallback
+      - "7882:7882/udp" # WebRTC UDP audio/video
+      - "50000-50050:50000-50050/udp" # Required WebRTC audio transport range
+    volumes:
+      - ./livekit.yaml:/etc/livekit.yaml
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: osmiumcore-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
