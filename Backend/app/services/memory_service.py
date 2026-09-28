@@ -108,3 +108,31 @@ async def log_conversation_turn(conn: aiosqlite.Connection, session_id: str, rol
         (session_id, role, content, now()),
     )
     await conn.commit()
+
+async def log_user_turn(conn: aiosqlite.Connection, user_id: str, session_id: str, role: str, content: str, room_name: str = "default") -> None:
+    """Ensure user profile and session log exist, then log conversation turn."""
+    await get_or_create_profile(conn, user_id)
+    await conn.execute(
+        "INSERT OR IGNORE INTO session_logs (session_id, user_id, room_name, created_at) VALUES (?, ?, ?, ?)",
+        (session_id, user_id, room_name, now()),
+    )
+    await conn.execute(
+        "INSERT INTO conversation_turns (session_id, role, content, timestamp) VALUES (?, ?, ?, ?)",
+        (session_id, role, content, now()),
+    )
+    await conn.commit()
+
+async def get_recent_conversation_turns(conn: aiosqlite.Connection, session_id: str, limit: int = 10) -> List[dict]:
+    """Retrieve recent conversation turns for session context."""
+    sql = """
+        SELECT role, content, timestamp
+        FROM conversation_turns
+        WHERE session_id = ?
+        ORDER BY id DESC
+        LIMIT ?
+    """
+    async with conn.execute(sql, (session_id, limit)) as cur:
+        rows = await cur.fetchall()
+        # Return in chronological order
+        return [{"role": r[0], "content": r[1], "timestamp": r[2]} for r in reversed(rows)]
+

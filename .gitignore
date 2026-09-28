@@ -29,6 +29,8 @@ wheels/
 .installed.cfg
 *.egg
 .pytest_cache/
+*.db
+*.sqlite*
 
 # Node & Frontend
 node_modules/

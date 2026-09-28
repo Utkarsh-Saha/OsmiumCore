@@ -1,19 +1,24 @@
 import aiosqlite
 import os
+from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
 # Path to the SQLite DB file; can be overridden via environment variable
 DB_PATH = os.getenv("OSMIUM_MEMORY_DB", "osmium_memory.db")
 
-async def get_connection() -> aiosqlite.Connection:
-    """Create and return a new async SQLite connection.
-    Enables foreign keys and WAL mode for safe concurrent access.
+@asynccontextmanager
+async def get_connection() -> AsyncGenerator[aiosqlite.Connection, None]:
+    """Async context manager that provides an open SQLite connection with WAL and FK enabled,
+    and guarantees proper closure upon exit.
     """
     conn = await aiosqlite.connect(DB_PATH)
     await conn.execute("PRAGMA foreign_keys = ON;")
     await conn.execute("PRAGMA journal_mode = WAL;")
     await conn.commit()
-    return conn
+    try:
+        yield conn
+    finally:
+        await conn.close()
 
 async def init_db() -> None:
     """Create all required tables for the memory subsystem if they don't exist.
@@ -85,8 +90,5 @@ async def init_db() -> None:
 
 # FastAPI dependency – yields a connection and guarantees closure.
 async def get_db() -> AsyncGenerator[aiosqlite.Connection, None]:
-    conn = await get_connection()
-    try:
+    async with get_connection() as conn:
         yield conn
-    finally:
-        await conn.close()

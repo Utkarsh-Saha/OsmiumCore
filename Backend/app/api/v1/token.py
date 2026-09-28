@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from livekit import api
-from Backend.app.core.config import settings
+from app.core.config import settings
 
 router = APIRouter()
 

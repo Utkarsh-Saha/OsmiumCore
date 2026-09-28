@@ -7,3 +7,5 @@ livekit-plugins-google>=1.0.0
 livekit-plugins-silero>=1.0.0
 pydantic>=2.9.0
 aiosqlite>=0.20.0
+python-multipart>=0.0.9
+openai-whisper>=20231117
