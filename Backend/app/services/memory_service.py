@@ -31,6 +31,8 @@ async def get_or_create_profile(conn: aiosqlite.Connection, user_id: str) -> dic
 
 async def update_profile(conn: aiosqlite.Connection, user_id: str, display_name: Optional[str] = None,
                          voice_preference: Optional[str] = None, system_prompt_overrides: Optional[str] = None) -> None:
+    # Ensure profile row exists
+    await get_or_create_profile(conn, user_id)
     fields = []
     values = []
     if display_name is not None:
